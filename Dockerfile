@@ -39,8 +39,9 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 
 FROM scratch AS final
 
-ENV PARSE_DMARC_CONFIG=/data/config.json
 VOLUME /data
+ENV PARSE_DMARC_CONFIG=/app/config.json \
+    DATABASE_PATH=/data/parse-dmarc.db
 
 COPY --from=backend-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=backend-builder /app/parse-dmarc /app/parse-dmarc
@@ -48,4 +49,4 @@ COPY --from=backend-builder /app/parse-dmarc /app/parse-dmarc
 EXPOSE 8080
 
 ENTRYPOINT ["/app/parse-dmarc"]
-CMD ["--config=/data/config.json"]
+CMD ["--config=/app/config.json"]

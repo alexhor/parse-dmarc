@@ -30,6 +30,7 @@ func (c *Client) Connect() error {
 	var err error
 
 	addr := fmt.Sprintf("%s:%d", c.config.Host, c.config.Port)
+	log.Printf("Connecting to %s...", addr)
 
 	if c.config.UseTLS {
 		imapClient, err = client.DialTLS(addr, &tls.Config{

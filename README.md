@@ -13,7 +13,7 @@ docker pull ghcr.io/meysam81/parse-dmarc:latest
 
 docker run -d \
   -p 8080:8080 \
-  -v $(pwd)/config.json:/data/config.json \
+  -v $(pwd)/config.json:/app/config.json \
   -v $(pwd)/data:/data \
   ghcr.io/meysam81/parse-dmarc:latest
 ```
@@ -71,7 +71,7 @@ EOF
 docker run -d \
   --name parse-dmarc \
   -p 8080:8080 \
-  -v $(pwd)/config.json:/data/config.json \
+  -v $(pwd)/config.json:/app/config.json \
   -v $(pwd)/data:/data \
   ghcr.io/meysam81/parse-dmarc:latest
 ```
@@ -250,18 +250,16 @@ make backend
 
 ### Docker Compose
 
-Create `docker-compose.yml`:
+Create `compose.yml`:
 
 ```yaml
-version: "3.8"
-
 services:
   parse-dmarc:
     image: ghcr.io/meysam81/parse-dmarc:latest
     ports:
       - "8080:8080"
     volumes:
-      - ./config.json:/data/config.json
+      - ./config.json:/app/config.json
       - ./data:/data
     restart: unless-stopped
 ```
@@ -355,7 +353,7 @@ This implementation is inspired by [ParseDMARC](https://github.com/domainaware/p
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+Apache-2.0 License - see [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
