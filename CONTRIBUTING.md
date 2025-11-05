@@ -13,17 +13,20 @@ Thank you for your interest in contributing to Parse DMARC! This document provid
 ### Getting Started
 
 1. Fork and clone the repository:
+
 ```bash
 git clone https://github.com/meysam81/parse-dmarc.git
 cd parse-dmarc
 ```
 
 2. Install dependencies:
+
 ```bash
 make install-deps
 ```
 
 3. Build the project:
+
 ```bash
 make build
 ```
@@ -55,11 +58,13 @@ parse-dmarc/
 ### Backend Development
 
 Run the application in development mode:
+
 ```bash
 make dev
 ```
 
 Run tests:
+
 ```bash
 go test ./...
 ```
@@ -69,12 +74,14 @@ Add tests for new features in `*_test.go` files.
 ### Frontend Development
 
 Start the frontend dev server with hot reload:
+
 ```bash
 cd frontend
 npm run dev
 ```
 
 Build the frontend:
+
 ```bash
 cd frontend
 npm run build
@@ -83,17 +90,20 @@ npm run build
 ### Making Changes
 
 1. Create a new branch:
+
 ```bash
 git checkout -b feature/your-feature-name
 ```
 
 2. Make your changes and commit:
+
 ```bash
 git add .
 git commit -m "Description of changes"
 ```
 
 3. Push and create a pull request:
+
 ```bash
 git push origin feature/your-feature-name
 ```
@@ -118,6 +128,7 @@ git push origin feature/your-feature-name
 ### Go Tests
 
 Add tests for all new functionality:
+
 ```bash
 go test -v ./...
 ```
@@ -125,6 +136,7 @@ go test -v ./...
 ### Manual Testing
 
 1. Generate a config file:
+
 ```bash
 ./bin/parse-dmarc -gen-config
 ```
@@ -132,6 +144,7 @@ go test -v ./...
 2. Edit config.json with test credentials
 
 3. Run in serve-only mode for UI testing:
+
 ```bash
 ./bin/parse-dmarc -serve-only
 ```

@@ -25,7 +25,9 @@
           <div class="stat-card">
             <div class="stat-icon">📧</div>
             <div class="stat-content">
-              <div class="stat-value">{{ formatNumber(statistics.total_messages) }}</div>
+              <div class="stat-value">
+                {{ formatNumber(statistics.total_messages) }}
+              </div>
               <div class="stat-label">Total Messages</div>
             </div>
           </div>
@@ -33,7 +35,9 @@
           <div class="stat-card">
             <div class="stat-icon">✅</div>
             <div class="stat-content">
-              <div class="stat-value">{{ statistics.compliance_rate.toFixed(1) }}%</div>
+              <div class="stat-value">
+                {{ statistics.compliance_rate.toFixed(1) }}%
+              </div>
               <div class="stat-label">Compliance Rate</div>
             </div>
           </div>
@@ -59,7 +63,9 @@
               >
                 <div class="source-ip">{{ source.source_ip }}</div>
                 <div class="source-stats">
-                  <div class="source-count">{{ formatNumber(source.count) }} messages</div>
+                  <div class="source-count">
+                    {{ formatNumber(source.count) }} messages
+                  </div>
                   <div class="source-bar">
                     <div
                       class="source-bar-pass"
@@ -107,8 +113,12 @@
                     @click="viewReport(report)"
                   >
                     <td>{{ report.org_name }}</td>
-                    <td><code>{{ report.domain }}</code></td>
-                    <td class="date-cell">{{ formatDate(report.date_begin) }}</td>
+                    <td>
+                      <code>{{ report.domain }}</code>
+                    </td>
+                    <td class="date-cell">
+                      {{ formatDate(report.date_begin) }}
+                    </td>
                     <td>{{ formatNumber(report.total_messages) }}</td>
                     <td>
                       <span
@@ -126,7 +136,8 @@
               </table>
             </div>
             <div v-else class="empty-state">
-              No reports available yet. Check your IMAP configuration and run the fetch process.
+              No reports available yet. Check your IMAP configuration and run
+              the fetch process.
             </div>
           </div>
         </div>
@@ -141,20 +152,26 @@
             <div class="modal-body">
               <div class="detail-grid">
                 <div class="detail-item">
-                  <strong>Organization:</strong> {{ selectedReport.report_metadata.org_name }}
+                  <strong>Organization:</strong>
+                  {{ selectedReport.report_metadata.org_name }}
                 </div>
                 <div class="detail-item">
-                  <strong>Domain:</strong> {{ selectedReport.policy_published.domain }}
+                  <strong>Domain:</strong>
+                  {{ selectedReport.policy_published.domain }}
                 </div>
                 <div class="detail-item">
-                  <strong>Report ID:</strong> {{ selectedReport.report_metadata.report_id }}
+                  <strong>Report ID:</strong>
+                  {{ selectedReport.report_metadata.report_id }}
                 </div>
                 <div class="detail-item">
-                  <strong>Policy:</strong> {{ selectedReport.policy_published.p }}
+                  <strong>Policy:</strong>
+                  {{ selectedReport.policy_published.p }}
                 </div>
               </div>
 
-              <h4 class="detail-subtitle">Records ({{ selectedReport.records.length }})</h4>
+              <h4 class="detail-subtitle">
+                Records ({{ selectedReport.records.length }})
+              </h4>
               <div class="records-list">
                 <div
                   v-for="(record, idx) in selectedReport.records"
@@ -163,13 +180,29 @@
                 >
                   <div class="record-header">
                     <span class="record-ip">{{ record.row.source_ip }}</span>
-                    <span class="record-count">{{ record.row.count }} messages</span>
+                    <span class="record-count"
+                      >{{ record.row.count }} messages</span
+                    >
                   </div>
                   <div class="record-details">
-                    <span :class="'result-badge ' + (record.row.policy_evaluated.dkim === 'pass' ? 'pass' : 'fail')">
+                    <span
+                      :class="
+                        'result-badge ' +
+                        (record.row.policy_evaluated.dkim === 'pass'
+                          ? 'pass'
+                          : 'fail')
+                      "
+                    >
                       DKIM: {{ record.row.policy_evaluated.dkim }}
                     </span>
-                    <span :class="'result-badge ' + (record.row.policy_evaluated.spf === 'pass' ? 'pass' : 'fail')">
+                    <span
+                      :class="
+                        'result-badge ' +
+                        (record.row.policy_evaluated.spf === 'pass'
+                          ? 'pass'
+                          : 'fail')
+                      "
+                    >
                       SPF: {{ record.row.policy_evaluated.spf }}
                     </span>
                     <span class="result-badge">
@@ -186,103 +219,161 @@
 
     <footer class="footer">
       <div class="container">
-        <p>Built with Vue 3 + Go | RFC 7489 Compliant</p>
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>Parse DMARC</h4>
+            <p>RFC 7489 Compliant DMARC Report Parser</p>
+          </div>
+          <div class="footer-section">
+            <h4>Links</h4>
+            <div class="footer-links">
+              <a
+                href="https://github.com/meysam81/parse-dmarc"
+                target="_blank"
+                rel="noopener"
+                >GitHub</a
+              >
+              <a
+                href="https://github.com/meysam81/parse-dmarc/issues"
+                target="_blank"
+                rel="noopener"
+                >Issues</a
+              >
+              <a
+                href="https://github.com/meysam81/parse-dmarc/blob/main/README.md"
+                target="_blank"
+                rel="noopener"
+                >Documentation</a
+              >
+            </div>
+          </div>
+          <div class="footer-section">
+            <h4>Resources</h4>
+            <div class="footer-links">
+              <a
+                href="https://datatracker.ietf.org/doc/html/rfc7489"
+                target="_blank"
+                rel="noopener"
+                >RFC 7489</a
+              >
+              <a href="https://dmarc.org/" target="_blank" rel="noopener"
+                >DMARC.org</a
+              >
+              <a
+                href="https://github.com/meysam81/parse-dmarc/blob/main/LICENSE"
+                target="_blank"
+                rel="noopener"
+                >Apache-2.0 License</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            Built with
+            <a href="https://vuejs.org/" target="_blank" rel="noopener"
+              >Vue 3</a
+            >
+            +
+            <a href="https://golang.org/" target="_blank" rel="noopener">Go</a>
+          </p>
+          <p>
+            Docker:
+            <code class="docker-image">ghcr.io/meysam81/parse-dmarc</code>
+          </p>
+        </div>
       </div>
     </footer>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue";
 
 export default {
-  name: 'App',
+  name: "App",
   setup() {
-    const statistics = ref(null)
-    const topSources = ref([])
-    const reports = ref([])
-    const selectedReport = ref(null)
-    const loading = ref(true)
+    const statistics = ref(null);
+    const topSources = ref([]);
+    const reports = ref([]);
+    const selectedReport = ref(null);
+    const loading = ref(true);
 
     const fetchStatistics = async () => {
       try {
-        const response = await fetch('/api/statistics')
-        statistics.value = await response.json()
+        const response = await fetch("/api/statistics");
+        statistics.value = await response.json();
       } catch (error) {
-        console.error('Failed to fetch statistics:', error)
+        console.error("Failed to fetch statistics:", error);
       }
-    }
+    };
 
     const fetchTopSources = async () => {
       try {
-        const response = await fetch('/api/top-sources?limit=10')
-        topSources.value = await response.json()
+        const response = await fetch("/api/top-sources?limit=10");
+        topSources.value = await response.json();
       } catch (error) {
-        console.error('Failed to fetch top sources:', error)
+        console.error("Failed to fetch top sources:", error);
       }
-    }
+    };
 
     const fetchReports = async () => {
       try {
-        const response = await fetch('/api/reports?limit=20')
-        reports.value = await response.json()
+        const response = await fetch("/api/reports?limit=20");
+        reports.value = await response.json();
       } catch (error) {
-        console.error('Failed to fetch reports:', error)
+        console.error("Failed to fetch reports:", error);
       }
-    }
+    };
 
     const viewReport = async (report) => {
       try {
-        const response = await fetch(`/api/reports/${report.id}`)
-        selectedReport.value = await response.json()
+        const response = await fetch(`/api/reports/${report.id}`);
+        selectedReport.value = await response.json();
       } catch (error) {
-        console.error('Failed to fetch report details:', error)
+        console.error("Failed to fetch report details:", error);
       }
-    }
+    };
 
     const closeModal = () => {
-      selectedReport.value = null
-    }
+      selectedReport.value = null;
+    };
 
     const formatNumber = (num) => {
-      return new Intl.NumberFormat().format(num)
-    }
+      return new Intl.NumberFormat().format(num);
+    };
 
     const formatDate = (timestamp) => {
-      return new Date(timestamp * 1000).toLocaleDateString()
-    }
+      return new Date(timestamp * 1000).toLocaleDateString();
+    };
 
     const getPassPercentage = (source) => {
-      const total = source.count
-      return total > 0 ? (source.pass / total * 100) : 0
-    }
+      const total = source.count;
+      return total > 0 ? (source.pass / total) * 100 : 0;
+    };
 
     const getFailPercentage = (source) => {
-      const total = source.count
-      return total > 0 ? (source.fail / total * 100) : 0
-    }
+      const total = source.count;
+      return total > 0 ? (source.fail / total) * 100 : 0;
+    };
 
     const getComplianceClass = (rate) => {
-      if (rate >= 95) return 'high'
-      if (rate >= 70) return 'medium'
-      return 'low'
-    }
+      if (rate >= 95) return "high";
+      if (rate >= 70) return "medium";
+      return "low";
+    };
 
     const loadData = async () => {
-      loading.value = true
-      await Promise.all([
-        fetchStatistics(),
-        fetchTopSources(),
-        fetchReports()
-      ])
-      loading.value = false
-    }
+      loading.value = true;
+      await Promise.all([fetchStatistics(), fetchTopSources(), fetchReports()]);
+      loading.value = false;
+    };
 
     onMounted(() => {
-      loadData()
+      loadData();
       // Auto-refresh every 5 minutes
-      setInterval(loadData, 5 * 60 * 1000)
-    })
+      setInterval(loadData, 5 * 60 * 1000);
+    });
 
     return {
       statistics,
@@ -296,10 +387,10 @@ export default {
       formatDate,
       getPassPercentage,
       getFailPercentage,
-      getComplianceClass
-    }
-  }
-}
+      getComplianceClass,
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -422,7 +513,7 @@ export default {
 }
 
 .source-ip {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-weight: 600;
   color: #333;
   min-width: 150px;
@@ -512,7 +603,7 @@ code {
   background: #f8f9fa;
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 0.9rem;
 }
 
@@ -651,7 +742,7 @@ code {
 }
 
 .record-ip {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   color: #667eea;
 }
 
@@ -687,10 +778,77 @@ code {
 .footer {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  padding: 1.5rem 0;
+  padding: 2rem 0 1rem;
   color: white;
-  text-align: center;
   margin-top: auto;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-section h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.footer-section p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: rgba(255, 255, 255, 1);
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-bottom p {
+  margin: 0.25rem 0;
+}
+
+.footer-bottom a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+}
+
+.footer-bottom a:hover {
+  text-decoration: underline;
+}
+
+.docker-image {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 0.8rem;
+  color: #88ddff;
 }
 
 @media (max-width: 768px) {
@@ -709,6 +867,19 @@ code {
 
   .source-ip {
     min-width: auto;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .footer-section {
+    text-align: center;
+  }
+
+  .footer-links {
+    align-items: center;
   }
 }
 </style>

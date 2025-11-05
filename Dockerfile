@@ -32,12 +32,15 @@ WORKDIR /app
 ENV CGO_ENABLED=0
 
 COPY . .
-COPY --from=frontend-builder /build/internal/api/dist ./internal/api/dist
+COPY --from=frontend-builder /build/frontend/dist ./internal/api/dist
 
 RUN --mount=type=cache,target=/go/pkg/mod \
     go build -ldflags="-s -w -extldflags '-static' -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.date=${DATE} -X main.builtBy=${BUILT_BY}" -trimpath -o parse-dmarc ./cmd/parse-dmarc
 
 FROM scratch AS final
+
+ENV PARSE_DMARC_CONFIG=/data/config.json
+VOLUME /data
 
 COPY --from=backend-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=backend-builder /app/parse-dmarc /app/parse-dmarc

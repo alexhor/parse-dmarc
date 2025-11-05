@@ -4,6 +4,22 @@ A minimal dependency Go application that parses DMARC aggregate reports and pres
 
 [![Dashboard Screenshot](./assets/demo.png)](https://github.com/meysam81/parse-dmarc)
 
+## 🚀 Quick Start with Docker
+
+The fastest way to get started:
+
+```bash
+docker pull ghcr.io/meysam81/parse-dmarc:latest
+
+docker run -d \
+  -p 8080:8080 \
+  -v $(pwd)/config.json:/data/config.json \
+  -v $(pwd)/data:/data \
+  ghcr.io/meysam81/parse-dmarc:latest
+```
+
+Access the dashboard at `http://localhost:8080`
+
 ## Features
 
 - 📧 **IMAP Integration** - Automatically fetches DMARC reports from your email inbox
@@ -16,12 +32,51 @@ A minimal dependency Go application that parses DMARC aggregate reports and pres
 
 ## Quick Start
 
-### Prerequisites
+### Using Docker (Recommended)
 
-- Go 1.21 or higher
-- Node.js 18+ and npm (for building frontend)
+**Pull the image:**
 
-### Installation
+```bash
+docker pull ghcr.io/meysam81/parse-dmarc:latest
+```
+
+**Create a configuration file:**
+
+```bash
+mkdir -p data
+cat > config.json <<EOF
+{
+  "imap": {
+    "host": "imap.gmail.com",
+    "port": 993,
+    "username": "your-email@gmail.com",
+    "password": "your-app-password",
+    "mailbox": "INBOX",
+    "use_tls": true
+  },
+  "database": {
+    "path": "/data/db.sqlite"
+  },
+  "server": {
+    "port": 8080,
+    "host": "0.0.0.0"
+  }
+}
+EOF
+```
+
+**Run the container:**
+
+```bash
+docker run -d \
+  --name parse-dmarc \
+  -p 8080:8080 \
+  -v $(pwd)/config.json:/data/config.json \
+  -v $(pwd)/data:/data \
+  ghcr.io/meysam81/parse-dmarc:latest
+```
+
+### Building from Source
 
 1. Clone the repository:
 
@@ -135,6 +190,12 @@ The parser handles the complete DMARC aggregate report schema:
 
 ## Development
 
+### Prerequisites
+
+- Go 1.21+
+- Node.js 18+ or Bun
+- Make
+
 ### Frontend Development
 
 Run frontend dev server with hot reload:
@@ -155,6 +216,14 @@ make dev
 
 ```bash
 make test
+```
+
+### Code Quality
+
+We use `golangci-lint` for Go code quality:
+
+```bash
+make lint
 ```
 
 ## Building
@@ -178,6 +247,32 @@ make backend
 ```
 
 ## Deployment
+
+### Docker Compose
+
+Create `docker-compose.yml`:
+
+```yaml
+version: "3.8"
+
+services:
+  parse-dmarc:
+    image: ghcr.io/meysam81/parse-dmarc:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config.json:/data/config.json
+      - ./data:/data
+    restart: unless-stopped
+```
+
+Run with:
+
+```bash
+docker-compose up -d
+```
+
+### Binary Deployment
 
 The application compiles to a single binary that can be deployed anywhere:
 
@@ -260,24 +355,16 @@ This implementation is inspired by [ParseDMARC](https://github.com/domainaware/p
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License - see [LICENSE](LICENSE) file for details.
 
-## Contributing
+## Acknowledgments
 
-Contributions welcome! Please open an issue or submit a pull request.
+- Inspired by [ParseDMARC](https://github.com/domainaware/parsedmarc)
+- Built with [Go](https://golang.org/) and [Vue.js](https://vuejs.org/)
+- Uses [go-imap](https://github.com/emersion/go-imap) for IMAP connectivity
 
-## Roadmap
+---
 
-- [ ] Forensic report support (RUF)
-- [ ] OAuth2 support for IMAP
-- [ ] Export reports (CSV, JSON)
-- [ ] Email alerts for compliance issues
-- [ ] Multi-domain support
-- [ ] DMARC policy recommendations
-- [ ] Historical trend analysis
+**Star ⭐ this repository if you find it useful!**
 
-## References
-
-- [RFC 7489 - DMARC](https://datatracker.ietf.org/doc/html/rfc7489)
-- [DMARC.org](https://dmarc.org/)
-- [ParseDMARC](https://github.com/domainaware/parsedmarc)
+Made with ❤️ by developers, for developers.

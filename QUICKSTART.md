@@ -77,6 +77,7 @@ Edit `config.json` with your email server details:
 ```
 
 **Note for Gmail**:
+
 1. Enable 2-factor authentication
 2. Generate an [App Password](https://support.google.com/accounts/answer/185833)
 3. Use the app password in the config
@@ -181,16 +182,19 @@ Once running, open http://localhost:8080 in your browser.
 ### Systemd Service
 
 1. Copy binary:
+
 ```bash
 sudo cp bin/parse-dmarc /usr/local/bin/
 ```
 
 2. Create user:
+
 ```bash
 sudo useradd -r -s /bin/false parse-dmarc
 ```
 
 3. Create directories:
+
 ```bash
 sudo mkdir -p /var/lib/parse-dmarc
 sudo mkdir -p /etc/parse-dmarc
@@ -199,6 +203,7 @@ sudo chown -R parse-dmarc:parse-dmarc /var/lib/parse-dmarc
 ```
 
 4. Install service:
+
 ```bash
 sudo cp parse-dmarc.service /etc/systemd/system/
 sudo systemctl daemon-reload
@@ -207,6 +212,7 @@ sudo systemctl start parse-dmarc
 ```
 
 5. Check status:
+
 ```bash
 sudo systemctl status parse-dmarc
 ```
