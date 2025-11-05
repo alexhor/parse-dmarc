@@ -1,7 +1,7 @@
 package main
 
 import (
-	"flag"
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -14,6 +14,7 @@ import (
 	"github.com/meysam81/parse-dmarc/internal/imap"
 	"github.com/meysam81/parse-dmarc/internal/parser"
 	"github.com/meysam81/parse-dmarc/internal/storage"
+	"github.com/urfave/cli/v3"
 )
 
 var (
@@ -24,47 +25,89 @@ var (
 )
 
 func main() {
-	var (
-		configPath    = flag.String("config", "config.json", "Path to configuration file")
-		genConfig     = flag.Bool("gen-config", false, "Generate sample configuration file")
-		fetchOnce     = flag.Bool("fetch-once", false, "Fetch reports once and exit")
-		serveOnly     = flag.Bool("serve-only", false, "Only serve the dashboard without fetching")
-		fetchInterval = flag.Int("fetch-interval", 300, "Interval in seconds between fetch operations")
-		showVersion   = flag.Bool("version", false, "Show version information")
-	)
-	flag.Parse()
-
-	if *showVersion {
-		fmt.Printf("Version:    %s\n", version)
-		fmt.Printf("Commit:     %s\n", commit)
-		fmt.Printf("Build Date: %s\n", date)
-		fmt.Printf("Built By:   %s\n", builtBy)
-		return
+	cmd := &cli.Command{
+		Name:                  "parse-dmarc",
+		Usage:                 "Parse and analyze DMARC reports from IMAP mailbox",
+		Version:               version,
+		EnableShellCompletion: true,
+		Suggest:               true,
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "config",
+				Aliases: []string{"c"},
+				Usage:   "Path to configuration file",
+				Value:   "config.json",
+				Sources: cli.EnvVars("PARSE_DMARC_CONFIG"),
+			},
+			&cli.BoolFlag{
+				Name:    "gen-config",
+				Usage:   "Generate sample configuration file",
+				Sources: cli.EnvVars("PARSE_DMARC_GEN_CONFIG"),
+			},
+			&cli.BoolFlag{
+				Name:    "fetch-once",
+				Usage:   "Fetch reports once and exit",
+				Sources: cli.EnvVars("PARSE_DMARC_FETCH_ONCE"),
+			},
+			&cli.BoolFlag{
+				Name:    "serve-only",
+				Usage:   "Only serve the dashboard without fetching",
+				Sources: cli.EnvVars("PARSE_DMARC_SERVE_ONLY"),
+			},
+			&cli.IntFlag{
+				Name:    "fetch-interval",
+				Usage:   "Interval in seconds between fetch operations",
+				Value:   300,
+				Sources: cli.EnvVars("PARSE_DMARC_FETCH_INTERVAL"),
+			},
+		},
+		Action: run,
+		Commands: []*cli.Command{
+			{
+				Name:  "version",
+				Usage: "Show version information",
+				Action: func(ctx context.Context, cmd *cli.Command) error {
+					fmt.Printf("Version:    %s\n", version)
+					fmt.Printf("Commit:     %s\n", commit)
+					fmt.Printf("Build Date: %s\n", date)
+					fmt.Printf("Built By:   %s\n", builtBy)
+					return nil
+				},
+			},
+		},
 	}
 
-	// Generate sample config if requested
-	if *genConfig {
-		if err := config.GenerateSample(*configPath); err != nil {
-			log.Fatalf("Failed to generate config: %v", err)
+	if err := cmd.Run(context.Background(), os.Args); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run(ctx context.Context, cmd *cli.Command) error {
+	configPath := cmd.String("config")
+	genConfig := cmd.Bool("gen-config")
+	fetchOnce := cmd.Bool("fetch-once")
+	serveOnly := cmd.Bool("serve-only")
+	fetchInterval := cmd.Int("fetch-interval")
+
+	if genConfig {
+		if err := config.GenerateSample(configPath); err != nil {
+			return fmt.Errorf("failed to generate config: %w", err)
 		}
-		log.Printf("Sample configuration written to %s", *configPath)
-		return
+		log.Printf("Sample configuration written to %s", configPath)
+		return nil
 	}
 
-	// Load configuration
-	cfg, err := config.Load(*configPath)
+	cfg, err := config.Load(configPath)
 	if err != nil {
-		log.Fatalf("Failed to load config: %v", err)
+		return fmt.Errorf("failed to load config: %w", err)
 	}
 
-	// Initialize storage
 	store, err := storage.NewStorage(cfg.Database.Path)
 	if err != nil {
-		log.Fatalf("Failed to initialize storage: %v", err)
+		return fmt.Errorf("failed to initialize storage: %w", err)
 	}
 	defer func() { _ = store.Close() }()
 
-	// Start API server in background
 	server := api.NewServer(store, cfg.Server.Host, cfg.Server.Port)
 	go func() {
 		if err := server.Start(); err != nil {
@@ -72,35 +115,29 @@ func main() {
 		}
 	}()
 
-	// If serve-only mode, just wait for signal
-	if *serveOnly {
+	if serveOnly {
 		log.Println("Running in serve-only mode")
 		waitForSignal()
-		return
+		return nil
 	}
 
-	// Fetch reports
-	if *fetchOnce {
+	if fetchOnce {
 		if err := fetchReports(cfg, store); err != nil {
-			log.Fatalf("Failed to fetch reports: %v", err)
+			return fmt.Errorf("failed to fetch reports: %w", err)
 		}
 		log.Println("Fetch complete")
-		return
+		return nil
 	}
 
-	// Continuous fetching
-	log.Printf("Starting continuous fetch mode (interval: %d seconds)", *fetchInterval)
+	log.Printf("Starting continuous fetch mode (interval: %d seconds)", fetchInterval)
 
-	// Initial fetch
 	if err := fetchReports(cfg, store); err != nil {
 		log.Printf("Initial fetch failed: %v", err)
 	}
 
-	// Set up ticker for periodic fetching
-	ticker := time.NewTicker(time.Duration(*fetchInterval) * time.Second)
+	ticker := time.NewTicker(time.Duration(fetchInterval) * time.Second)
 	defer ticker.Stop()
 
-	// Wait for shutdown signal
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
@@ -112,7 +149,7 @@ func main() {
 			}
 		case <-sigChan:
 			log.Println("Shutting down...")
-			return
+			return nil
 		}
 	}
 }

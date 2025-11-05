@@ -3,10 +3,12 @@ module github.com/meysam81/parse-dmarc
 go 1.24.7
 
 require (
+	github.com/caarlos0/env/v11 v11.3.1
 	github.com/emersion/go-imap v1.2.1
 	github.com/emersion/go-message v0.18.2
 	github.com/goccy/go-json v0.10.5
 	github.com/mattn/go-sqlite3 v1.14.32
+	github.com/urfave/cli/v3 v3.5.0
 	modernc.org/sqlite v1.34.4
 )
 

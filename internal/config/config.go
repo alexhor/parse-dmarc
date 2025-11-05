@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/caarlos0/env/v11"
 	"github.com/goccy/go-json"
 )
 
@@ -16,23 +17,23 @@ type Config struct {
 
 // IMAPConfig holds IMAP server configuration
 type IMAPConfig struct {
-	Host     string `json:"host"`
-	Port     int    `json:"port"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Mailbox  string `json:"mailbox"`
-	UseTLS   bool   `json:"use_tls"`
+	Host     string `json:"host" env:"IMAP_HOST"`
+	Port     int    `json:"port" env:"IMAP_PORT" envDefault:"993"`
+	Username string `json:"username" env:"IMAP_USERNAME"`
+	Password string `json:"password" env:"IMAP_PASSWORD"`
+	Mailbox  string `json:"mailbox" env:"IMAP_MAILBOX" envDefault:"INBOX"`
+	UseTLS   bool   `json:"use_tls" env:"IMAP_USE_TLS" envDefault:"true"`
 }
 
 // DatabaseConfig holds database configuration
 type DatabaseConfig struct {
-	Path string `json:"path"`
+	Path string `json:"path" env:"DATABASE_PATH"`
 }
 
 // ServerConfig holds web server configuration
 type ServerConfig struct {
-	Port int    `json:"port"`
-	Host string `json:"host"`
+	Port int    `json:"port" env:"SERVER_PORT" envDefault:"8080"`
+	Host string `json:"host" env:"SERVER_HOST" envDefault:"0.0.0.0"`
 }
 
 func defaultDBPath() (string, error) {
@@ -54,25 +55,29 @@ func ensureDBPathExists(dbPath string) error {
 
 // Load loads configuration from a JSON file
 func Load(path string) (*Config, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-
 	var cfg Config
-	if err := json.Unmarshal(data, &cfg); err != nil {
+	var err error
+
+	if _, err := os.Stat(path); err == nil {
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := json.Unmarshal(data, &cfg); err != nil {
+			return nil, err
+		}
+	}
+
+	if err := env.Parse(&cfg); err != nil {
 		return nil, err
 	}
 
-	// Set defaults
 	if cfg.IMAP.Port == 0 {
 		cfg.IMAP.Port = 993
 	}
 	if cfg.IMAP.Mailbox == "" {
 		cfg.IMAP.Mailbox = "INBOX"
-	}
-	if !cfg.IMAP.UseTLS {
-		cfg.IMAP.UseTLS = true
 	}
 	if cfg.Database.Path == "" {
 		cfg.Database.Path, err = defaultDBPath()
