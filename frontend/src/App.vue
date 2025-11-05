@@ -153,60 +153,65 @@
               <div class="detail-grid">
                 <div class="detail-item">
                   <strong>Organization:</strong>
-                  {{ selectedReport.report_metadata.org_name }}
+                  {{ selectedReport.ReportMetadata?.OrgName || "N/A" }}
                 </div>
                 <div class="detail-item">
                   <strong>Domain:</strong>
-                  {{ selectedReport.policy_published.domain }}
+                  {{ selectedReport.PolicyPublished?.Domain || "N/A" }}
                 </div>
                 <div class="detail-item">
                   <strong>Report ID:</strong>
-                  {{ selectedReport.report_metadata.report_id }}
+                  {{ selectedReport.ReportMetadata?.ReportID || "N/A" }}
                 </div>
                 <div class="detail-item">
                   <strong>Policy:</strong>
-                  {{ selectedReport.policy_published.p }}
+                  {{ selectedReport.PolicyPublished?.P || "N/A" }}
                 </div>
               </div>
 
               <h4 class="detail-subtitle">
-                Records ({{ selectedReport?.records?.length || 0 }})
+                Records ({{ selectedReport?.Records?.length || 0 }})
               </h4>
               <div class="records-list">
                 <div
-                  v-for="(record, idx) in selectedReport.records"
+                  v-for="(record, idx) in selectedReport.Records || []"
                   :key="idx"
                   class="record-item"
                 >
                   <div class="record-header">
-                    <span class="record-ip">{{ record.row.source_ip }}</span>
+                    <span class="record-ip">{{
+                      record.Row?.SourceIP || "N/A"
+                    }}</span>
                     <span class="record-count"
-                      >{{ record.row.count }} messages</span
+                      >{{ record.Row?.Count || 0 }} messages</span
                     >
                   </div>
                   <div class="record-details">
                     <span
                       :class="
                         'result-badge ' +
-                        (record.row.policy_evaluated.dkim === 'pass'
+                        (record.Row?.PolicyEvaluated?.DKIM === 'pass'
                           ? 'pass'
                           : 'fail')
                       "
                     >
-                      DKIM: {{ record.row.policy_evaluated.dkim }}
+                      DKIM: {{ record.Row?.PolicyEvaluated?.DKIM || "unknown" }}
                     </span>
                     <span
                       :class="
                         'result-badge ' +
-                        (record.row.policy_evaluated.spf === 'pass'
+                        (record.Row?.PolicyEvaluated?.SPF === 'pass'
                           ? 'pass'
                           : 'fail')
                       "
                     >
-                      SPF: {{ record.row.policy_evaluated.spf }}
+                      SPF: {{ record.Row?.PolicyEvaluated?.SPF || "unknown" }}
                     </span>
                     <span class="result-badge">
-                      Disposition: {{ record.row.policy_evaluated.disposition }}
+                      Disposition:
+                      {{
+                        record.Row?.PolicyEvaluated?.Disposition || "unknown"
+                      }}
                     </span>
                   </div>
                 </div>
@@ -293,85 +298,106 @@ import { ref, onMounted } from "vue";
 export default {
   name: "App",
   setup() {
-    const statistics = ref(null);
-    const topSources = ref([]);
-    const reports = ref([]);
-    const selectedReport = ref(null);
-    const loading = ref(true);
+    var statistics = ref(null);
+    var topSources = ref([]);
+    var reports = ref([]);
+    var selectedReport = ref(null);
+    var loading = ref(true);
 
-    const fetchStatistics = async () => {
-      try {
-        const response = await fetch("/api/statistics");
-        statistics.value = await response.json();
-      } catch (error) {
-        console.error("Failed to fetch statistics:", error);
-      }
-    };
+    function fetchStatistics() {
+      return fetch("/api/statistics")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          statistics.value = data;
+        })
+        .catch(function (error) {
+          console.error("Failed to fetch statistics:", error);
+        });
+    }
 
-    const fetchTopSources = async () => {
-      try {
-        const response = await fetch("/api/top-sources?limit=10");
-        topSources.value = await response.json();
-      } catch (error) {
-        console.error("Failed to fetch top sources:", error);
-      }
-    };
+    function fetchTopSources() {
+      return fetch("/api/top-sources?limit=10")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          topSources.value = data;
+        })
+        .catch(function (error) {
+          console.error("Failed to fetch top sources:", error);
+        });
+    }
 
-    const fetchReports = async () => {
-      try {
-        const response = await fetch("/api/reports?limit=20");
-        reports.value = await response.json();
-      } catch (error) {
-        console.error("Failed to fetch reports:", error);
-      }
-    };
+    function fetchReports() {
+      return fetch("/api/reports?limit=20")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          reports.value = data;
+        })
+        .catch(function (error) {
+          console.error("Failed to fetch reports:", error);
+        });
+    }
 
-    const viewReport = async (report) => {
-      try {
-        const response = await fetch(`/api/reports/${report.id}`);
-        selectedReport.value = await response.json();
-      } catch (error) {
-        console.error("Failed to fetch report details:", error);
-      }
-    };
+    function viewReport(report) {
+      fetch(`/api/reports/${report.id}`)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          selectedReport.value = data;
+        })
+        .catch(function (error) {
+          console.error("Failed to fetch report details:", error);
+          selectedReport.value = null;
+        });
+    }
 
-    const closeModal = () => {
+    function closeModal() {
       selectedReport.value = null;
-    };
+    }
 
-    const formatNumber = (num) => {
+    function formatNumber(num) {
       return new Intl.NumberFormat().format(num);
-    };
+    }
 
-    const formatDate = (timestamp) => {
+    function formatDate(timestamp) {
       return new Date(timestamp * 1000).toLocaleDateString();
-    };
+    }
 
-    const getPassPercentage = (source) => {
-      const total = source.count;
+    function getPassPercentage(source) {
+      var total = source.count;
       return total > 0 ? (source.pass / total) * 100 : 0;
-    };
+    }
 
-    const getFailPercentage = (source) => {
-      const total = source.count;
+    function getFailPercentage(source) {
+      var total = source.count;
       return total > 0 ? (source.fail / total) * 100 : 0;
-    };
+    }
 
-    const getComplianceClass = (rate) => {
+    function getComplianceClass(rate) {
       if (rate >= 95) return "high";
       if (rate >= 70) return "medium";
       return "low";
-    };
+    }
 
-    const loadData = async () => {
+    function loadData() {
       loading.value = true;
-      await Promise.all([fetchStatistics(), fetchTopSources(), fetchReports()]);
-      loading.value = false;
-    };
+      return Promise.all([
+        fetchStatistics(),
+        fetchTopSources(),
+        fetchReports(),
+      ]).then(function () {
+        loading.value = false;
+      });
+    }
 
-    onMounted(() => {
+    onMounted(function () {
       loadData();
-      // Auto-refresh every 5 minutes
       setInterval(loadData, 5 * 60 * 1000);
     });
 
