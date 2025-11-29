@@ -4,11 +4,13 @@ A Go application that fetches DMARC reports from IMAP mailboxes, parses them, an
 
 ## Tech Stack
 
-- **Backend**: Go 1.24+
+- **Backend**: Go 1.24.7
 - **Frontend**: Vue.js 3 with Vite
 - **Database**: SQLite (supports both CGO and pure-Go variants)
 - **Package Manager**: Bun (for frontend)
 - **Task Runner**: Just (Justfile)
+- **CLI Framework**: urfave/cli/v3
+- **JSON Library**: goccy/go-json (high-performance)
 
 ## Project Structure
 
@@ -23,8 +25,12 @@ parse-dmarc/
 │   └── storage/           # SQLite database layer (CGO + pure-Go)
 ├── src/                   # Vue.js 3 frontend source
 ├── public/                # Static frontend assets
+├── assets/                # Project assets (icons, images)
+├── scripts/               # Utility scripts (SVG to PNG conversion)
 ├── Justfile               # Build commands
 ├── Dockerfile             # Multi-stage Docker build
+├── ROADMAP.md             # Product roadmap and feature planning
+├── CONTRIBUTING.md        # Contribution guidelines
 └── .goreleaser.yaml       # Release automation
 ```
 
@@ -54,6 +60,9 @@ just config
 
 # Clean build artifacts
 just clean
+
+# Install binary to /usr/local/bin
+just install
 ```
 
 ## Building
@@ -91,8 +100,9 @@ go test -v ./internal/parser/...
 - `internal/config/config.go` - Configuration loading (JSON file + env vars)
 - `internal/parser/dmarc.go` - DMARC XML parsing logic
 - `internal/imap/client.go` - IMAP email fetching
-- `internal/storage/sqlite_no_cgo.go` - Pure Go SQLite implementation
-- `internal/storage/sqlite_cgo.go` - CGO SQLite implementation
+- `internal/storage/common.go` - Shared storage logic and SQL queries
+- `internal/storage/sqlite_no_cgo.go` - Pure Go SQLite implementation (modernc.org/sqlite)
+- `internal/storage/sqlite_cgo.go` - CGO SQLite implementation (mattn/go-sqlite3)
 
 ## API Endpoints
 
@@ -116,3 +126,21 @@ Example: `config.example.json`
 - golangci-lint for Go linting
 - Docker build with cosign signing
 - Release automation via release-please and goreleaser
+
+## Roadmap
+
+See `ROADMAP.md` for the comprehensive product roadmap including:
+- Phase 1: Delightful Defaults (dark mode, DNS generator, health score, exports)
+- Phase 2: Proactive Intelligence (alerting, trends, GeoIP maps, DNS validator)
+- Phase 3: Enterprise Ready (auth, multi-org, RBAC, Prometheus metrics)
+- Phase 4: AI-Powered Security (AI assistant, anomaly detection, forensic reports)
+
+## Contributing
+
+See `CONTRIBUTING.md` for development setup and contribution guidelines. Key areas for contribution:
+- Forensic Reports (RUF support)
+- OAuth2 for IMAP authentication
+- CSV/JSON export functionality
+- Email alerts for compliance issues
+- Historical trend analysis
+- Test coverage improvements
