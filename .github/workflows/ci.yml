@@ -40,7 +40,7 @@ jobs:
         uses: meysam81/build-docker@main
         with:
           build-args: |
-            VERSION=dev-${{ github.sha }}
+            VERSION=pr-${{ github.event.pull_request.number }}-${{ github.sha }}
             COMMIT=${{ github.sha }}
             DATE=${{ github.event.head_commit.timestamp }}
             BUILT_BY=github-actions
@@ -63,7 +63,7 @@ jobs:
         uses: meysam81/build-docker@main
         with:
           build-args: |
-            VERSION=dev-${{ github.sha }}
+            VERSION=head-${{ github.sha }}
             COMMIT=${{ github.sha }}
             DATE=${{ github.event.head_commit.timestamp }}
             BUILT_BY=github-actions
