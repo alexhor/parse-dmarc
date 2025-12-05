@@ -102,7 +102,7 @@ docker run -d \
   --name parse-dmarc \
   -p 8080:8080 \
   -v $(pwd)/config.json:/app/config.json \
-  -v $(pwd)/data:/data \
+  -v parse-dmarc-data:/data \
   ghcr.io/meysam81/parse-dmarc:v1
 ```
 
