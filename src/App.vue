@@ -10,79 +10,14 @@
             </h1>
             <p class="subtitle">Email Authentication & Compliance Monitoring</p>
           </div>
-          <div class="header-actions">
-            <button
-              class="theme-toggle"
-              @click="toggleTheme"
-              :title="
-                theme === 'dark'
-                  ? 'Switch to light mode'
-                  : 'Switch to dark mode'
-              "
-              :aria-label="
-                theme === 'dark'
-                  ? 'Switch to light mode'
-                  : 'Switch to dark mode'
-              "
-              :aria-pressed="theme === 'dark'"
-            >
-              <span
-                v-if="theme === 'dark'"
-                class="theme-icon"
-                aria-hidden="true"
-              >
-                <!-- Sun SVG icon -->
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <circle cx="10" cy="10" r="5" fill="currentColor" />
-                  <g stroke="currentColor" stroke-width="2">
-                    <line x1="10" y1="1" x2="10" y2="3" />
-                    <line x1="10" y1="17" x2="10" y2="19" />
-                    <line x1="1" y1="10" x2="3" y2="10" />
-                    <line x1="17" y1="10" x2="19" y2="10" />
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                    <line x1="14.36" y1="14.36" x2="15.78" y2="15.78" />
-                    <line x1="4.22" y1="15.78" x2="5.64" y2="14.36" />
-                    <line x1="14.36" y1="5.64" x2="15.78" y2="4.22" />
-                  </g>
-                </svg>
-                <span class="visually-hidden">Light mode</span>
-              </span>
-              <span v-else class="theme-icon" aria-hidden="true">
-                <!-- Moon SVG icon -->
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <path
-                    d="M15.5 13.5A7 7 0 0 1 6.5 4.5a7 7 0 1 0 9 9z"
-                    fill="currentColor"
-                  />
-                </svg>
-                <span class="visually-hidden">Dark mode</span>
-              </span>
-            </button>
-            <button
-              class="refresh-button"
-              @click="refreshData"
-              :disabled="loading"
-            >
-              <span class="refresh-icon" :class="{ spinning: loading }"
-                >🔄</span
-              >
-              <span>{{ loading ? "Refreshing..." : "Refresh" }}</span>
-            </button>
-          </div>
+          <button
+            class="refresh-button"
+            @click="refreshData"
+            :disabled="loading"
+          >
+            <span class="refresh-icon" :class="{ spinning: loading }">🔄</span>
+            <span>{{ loading ? "Refreshing..." : "Refresh" }}</span>
+          </button>
         </div>
       </div>
     </header>
@@ -479,39 +414,9 @@ export default {
     var theme = ref("light");
     var showDnsGenerator = ref(false);
 
-    function getSystemTheme() {
-      if (
-        typeof window !== "undefined" &&
-        typeof window.matchMedia === "function" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-      ) {
-        return "dark";
-      }
-      return "light";
-    }
-
-    function initTheme() {
-      var savedTheme = localStorage.getItem("parse-dmarc-theme");
-      if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
-        theme.value = savedTheme;
-      } else {
-        theme.value = getSystemTheme();
-      }
-    }
-
-    function toggleTheme() {
-      theme.value = theme.value === "dark" ? "light" : "dark";
-      localStorage.setItem("parse-dmarc-theme", theme.value);
-    }
-
     function toggleDnsGenerator() {
       showDnsGenerator.value = !showDnsGenerator.value;
     }
-
-    // Apply theme to document
-    watchEffect(function () {
-      document.documentElement.setAttribute("data-theme", theme.value);
-    });
 
     function fetchStatistics() {
       return fetch("/api/statistics")
@@ -695,7 +600,6 @@ export default {
     }
 
     onMounted(function () {
-      initTheme();
       checkStarBannerDismissal();
       loadData();
       setInterval(loadData, 5 * 60 * 1000);
@@ -711,7 +615,6 @@ export default {
       sortDirection,
       sortedReports,
       starBannerVisible,
-      theme,
       viewReport,
       closeModal,
       formatNumber,
@@ -723,146 +626,13 @@ export default {
       getSortIndicator,
       refreshData,
       dismissStarBanner,
-      toggleTheme,
       showDnsGenerator,
-      toggleDnsGenerator,
     };
   },
 };
 </script>
 
 <style scoped>
-/* Theme Color Tokens */
-:root {
-  /* Background colors */
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f8f9fa;
-  --color-bg-tertiary: #e9ecef;
-  --color-bg-header: rgba(255, 255, 255, 0.1);
-  --color-bg-overlay: rgba(0, 0, 0, 0.5);
-
-  /* Text colors */
-  --color-text-primary: #333333;
-  --color-text-secondary: #666666;
-  --color-text-muted: #999999;
-  --color-text-inverse: #ffffff;
-
-  /* Accent colors */
-  --color-accent: #667eea;
-  --color-accent-light: #e7f3ff;
-  --color-accent-text: #0056b3;
-
-  /* Status colors - Success */
-  --color-success: #4caf50;
-  --color-success-bg: #d4edda;
-  --color-success-text: #155724;
-
-  /* Status colors - Warning */
-  --color-warning: #ff9800;
-  --color-warning-bg: #fff3cd;
-  --color-warning-text: #856404;
-
-  /* Status colors - Error */
-  --color-error: #f44336;
-  --color-error-bg: #f8d7da;
-  --color-error-text: #721c24;
-
-  /* Border colors */
-  --color-border: #dee2e6;
-  --color-border-light: rgba(255, 255, 255, 0.3);
-
-  /* Interactive states */
-  --color-hover-bg: rgba(255, 255, 255, 0.3);
-  --color-focus-ring: rgba(255, 255, 255, 0.5);
-
-  /* Shadows */
-  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
-
-  /* Star banner specific */
-  --color-star-gradient-start: rgba(255, 215, 0, 0.15);
-  --color-star-gradient-end: rgba(255, 165, 0, 0.15);
-  --color-star-border: rgba(255, 215, 0, 0.3);
-  --color-star-highlight: #ffd700;
-  --color-star-button-bg: linear-gradient(135deg, #ffd700, #ffed4e);
-  --color-star-button-hover: linear-gradient(135deg, #ffed4e, #ffd700);
-  --color-star-button-text: #333333;
-  --color-star-button-shadow: rgba(255, 215, 0, 0.3);
-
-  /* Code/monospace */
-  --color-code-bg: #f8f9fa;
-  --color-code-text: inherit;
-
-  /* Transition */
-  --theme-transition:
-    background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-/* Dark Theme */
-[data-theme="dark"] {
-  /* Background colors */
-  --color-bg-primary: #1e1e2e;
-  --color-bg-secondary: #2a2a3e;
-  --color-bg-tertiary: #3a3a4e;
-  --color-bg-header: rgba(0, 0, 0, 0.3);
-  --color-bg-overlay: rgba(0, 0, 0, 0.7);
-
-  /* Text colors */
-  --color-text-primary: #e4e4e7;
-  --color-text-secondary: #a1a1aa;
-  --color-text-muted: #71717a;
-  --color-text-inverse: #e4e4e7;
-
-  /* Accent colors */
-  --color-accent: #818cf8;
-  --color-accent-light: rgba(129, 140, 248, 0.2);
-  --color-accent-text: #a5b4fc;
-
-  /* Status colors - Success */
-  --color-success: #4ade80;
-  --color-success-bg: rgba(74, 222, 128, 0.2);
-  --color-success-text: #86efac;
-
-  /* Status colors - Warning */
-  --color-warning: #fbbf24;
-  --color-warning-bg: rgba(251, 191, 36, 0.2);
-  --color-warning-text: #fcd34d;
-
-  /* Status colors - Error */
-  --color-error: #f87171;
-  --color-error-bg: rgba(248, 113, 113, 0.2);
-  --color-error-text: #fca5a5;
-
-  /* Border colors */
-  --color-border: #3f3f46;
-  --color-border-light: rgba(255, 255, 255, 0.2);
-
-  /* Interactive states */
-  --color-hover-bg: rgba(255, 255, 255, 0.1);
-  --color-focus-ring: rgba(255, 255, 255, 0.3);
-
-  /* Shadows */
-  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
-
-  /* Star banner specific */
-  --color-star-gradient-start: rgba(255, 215, 0, 0.1);
-  --color-star-gradient-end: rgba(255, 165, 0, 0.1);
-  --color-star-border: rgba(255, 215, 0, 0.2);
-  --color-star-highlight: #fcd34d;
-  --color-star-button-bg: linear-gradient(135deg, #fbbf24, #fcd34d);
-  --color-star-button-hover: linear-gradient(135deg, #fcd34d, #fbbf24);
-  --color-star-button-text: #1e1e2e;
-  --color-star-button-shadow: rgba(251, 191, 36, 0.3);
-
-  /* Code/monospace */
-  --color-code-bg: #2a2a3e;
-  --color-code-text: #e4e4e7;
-}
-
 .app {
   min-height: 100vh;
   display: flex;
@@ -870,12 +640,11 @@ export default {
 }
 
 .header {
-  background: var(--color-bg-header);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   padding: 2rem 0;
-  color: var(--color-text-inverse);
-  box-shadow: var(--shadow-sm);
-  transition: var(--theme-transition);
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .container {
@@ -909,17 +678,10 @@ export default {
   gap: 2rem;
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.refresh-button,
-.theme-toggle {
+.refresh-button {
   background: rgba(255, 255, 255, 0.2);
-  border: 2px solid var(--color-border-light);
-  color: var(--color-text-inverse);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-size: 1rem;
@@ -932,15 +694,9 @@ export default {
   white-space: nowrap;
 }
 
-.theme-toggle {
-  padding: 0.75rem;
-  font-size: 1.25rem;
-}
-
-.refresh-button:hover:not(:disabled),
-.theme-toggle:hover {
-  background: var(--color-hover-bg);
-  border-color: var(--color-focus-ring);
+.refresh-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
 }
 
@@ -971,13 +727,12 @@ export default {
 .star-banner {
   background: linear-gradient(
     135deg,
-    var(--color-star-gradient-start),
-    var(--color-star-gradient-end)
+    rgba(255, 215, 0, 0.15),
+    rgba(255, 165, 0, 0.15)
   );
   backdrop-filter: blur(10px);
-  border-bottom: 2px solid var(--color-star-border);
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
   animation: slideDown 0.5s ease-out;
-  transition: var(--theme-transition);
 }
 
 @keyframes slideDown {
@@ -1025,14 +780,14 @@ export default {
 }
 
 .star-banner-message {
-  color: var(--color-text-inverse);
+  color: white;
   font-size: 0.95rem;
   line-height: 1.5;
 }
 
 .star-banner-message strong {
   font-weight: 600;
-  color: var(--color-star-highlight);
+  color: #ffd700;
 }
 
 .star-banner-actions {
@@ -1042,8 +797,8 @@ export default {
 }
 
 .star-button {
-  background: var(--color-star-button-bg);
-  color: var(--color-star-button-text);
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #333;
   padding: 0.65rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
@@ -1052,24 +807,24 @@ export default {
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s;
-  box-shadow: 0 4px 12px var(--color-star-button-shadow);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
   white-space: nowrap;
 }
 
 .star-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px var(--color-star-button-shadow);
-  background: var(--color-star-button-hover);
+  box-shadow: 0 6px 16px rgba(255, 215, 0, 0.4);
+  background: linear-gradient(135deg, #ffed4e, #ffd700);
 }
 
 .star-button:focus-visible {
-  outline: 2px solid var(--color-text-primary);
+  outline: 2px solid #333;
   outline-offset: 2px;
 }
 .dismiss-button {
   background: rgba(255, 255, 255, 0.2);
-  border: 1px solid var(--color-border-light);
-  color: var(--color-text-inverse);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
   padding: 0.5rem;
   width: 2.5rem;
   height: 2.5rem;
@@ -1084,12 +839,12 @@ export default {
 }
 
 .dismiss-button:hover {
-  background: var(--color-hover-bg);
-  border-color: var(--color-focus-ring);
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .dismiss-button:focus-visible {
-  outline: 2px solid var(--color-text-inverse);
+  outline: 2px solid white;
   outline-offset: 2px;
 }
 .main {
@@ -1105,16 +860,14 @@ export default {
 }
 
 .stat-card {
-  background: var(--color-bg-primary);
+  background: white;
   border-radius: 12px;
   padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  box-shadow: var(--shadow-sm);
-  transition:
-    transform 0.2s,
-    var(--theme-transition);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
 }
 
 .stat-card:hover {
@@ -1132,11 +885,11 @@ export default {
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: #667eea;
 }
 
 .stat-label {
-  color: var(--color-text-secondary);
+  color: #666;
   font-size: 0.9rem;
 }
 
@@ -1152,7 +905,7 @@ export default {
 }
 
 .section-title {
-  color: var(--color-text-inverse);
+  color: white;
   font-size: 1.5rem;
   margin-bottom: 1rem;
   font-weight: 600;
@@ -1200,11 +953,10 @@ export default {
 }
 
 .card {
-  background: var(--color-bg-primary);
+  background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  transition: var(--theme-transition);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .source-list {
@@ -1215,19 +967,18 @@ export default {
 
 .source-item {
   padding: 1rem;
-  background: var(--color-bg-secondary);
+  background: #f8f9fa;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  transition: var(--theme-transition);
 }
 
 .source-ip {
   font-family: "Courier New", monospace;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: #333;
   min-width: 150px;
 }
 
@@ -1237,13 +988,13 @@ export default {
 
 .source-count {
   font-size: 0.9rem;
-  color: var(--color-text-secondary);
+  color: #666;
   margin-bottom: 0.5rem;
 }
 
 .source-bar {
   height: 8px;
-  background: var(--color-bg-tertiary);
+  background: #e0e0e0;
   border-radius: 4px;
   overflow: hidden;
   display: flex;
@@ -1251,12 +1002,12 @@ export default {
 }
 
 .source-bar-pass {
-  background: var(--color-success);
+  background: #4caf50;
   transition: width 0.3s;
 }
 
 .source-bar-fail {
-  background: var(--color-error);
+  background: #f44336;
   transition: width 0.3s;
 }
 
@@ -1267,11 +1018,11 @@ export default {
 }
 
 .legend-pass {
-  color: var(--color-success);
+  color: #4caf50;
 }
 
 .legend-fail {
-  color: var(--color-error);
+  color: #f44336;
 }
 
 .table-container {
@@ -1286,11 +1037,10 @@ export default {
 .report-table th {
   text-align: left;
   padding: 0.75rem;
-  background: var(--color-bg-secondary);
+  background: #f8f9fa;
   font-weight: 600;
-  color: var(--color-text-primary);
-  border-bottom: 2px solid var(--color-border);
-  transition: var(--theme-transition);
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
 }
 
 .report-table th.sortable {
@@ -1300,14 +1050,12 @@ export default {
 }
 
 .report-table th.sortable:hover {
-  background: var(--color-bg-tertiary);
+  background: #e9ecef;
 }
 
 .report-table td {
   padding: 0.75rem;
-  border-bottom: 1px solid var(--color-border);
-  color: var(--color-text-primary);
-  transition: var(--theme-transition);
+  border-bottom: 1px solid #dee2e6;
 }
 
 .report-row {
@@ -1316,22 +1064,20 @@ export default {
 }
 
 .report-row:hover {
-  background: var(--color-bg-secondary);
+  background: #f8f9fa;
 }
 
 .date-cell {
-  color: var(--color-text-secondary);
+  color: #666;
   font-size: 0.9rem;
 }
 
 code {
-  background: var(--color-code-bg);
-  color: var(--color-code-text);
+  background: #f8f9fa;
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   font-family: "Courier New", monospace;
   font-size: 0.9rem;
-  transition: var(--theme-transition);
 }
 
 .compliance-badge {
@@ -1342,25 +1088,25 @@ code {
 }
 
 .compliance-badge.high {
-  background: var(--color-success-bg);
-  color: var(--color-success-text);
+  background: #d4edda;
+  color: #155724;
 }
 
 .compliance-badge.medium {
-  background: var(--color-warning-bg);
-  color: var(--color-warning-text);
+  background: #fff3cd;
+  color: #856404;
 }
 
 .compliance-badge.low {
-  background: var(--color-error-bg);
-  color: var(--color-error-text);
+  background: #f8d7da;
+  color: #721c24;
 }
 
 .policy-badge {
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  background: var(--color-accent-light);
-  color: var(--color-accent-text);
+  background: #e7f3ff;
+  color: #0056b3;
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -1369,7 +1115,7 @@ code {
 .empty-state {
   text-align: center;
   padding: 3rem;
-  color: var(--color-text-secondary);
+  color: #666;
 }
 
 .modal {
@@ -1378,7 +1124,7 @@ code {
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--color-bg-overlay);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1387,19 +1133,18 @@ code {
 }
 
 .modal-content {
-  background: var(--color-bg-primary);
+  background: white;
   border-radius: 12px;
   max-width: 800px;
   width: 100%;
   max-height: 80vh;
   overflow-y: auto;
-  box-shadow: var(--shadow-lg);
-  transition: var(--theme-transition);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
   padding: 1.5rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #dee2e6;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1408,7 +1153,6 @@ code {
 .modal-header h3 {
   margin: 0;
   font-size: 1.5rem;
-  color: var(--color-text-primary);
 }
 
 .modal-close {
@@ -1416,7 +1160,7 @@ code {
   border: none;
   font-size: 2rem;
   cursor: pointer;
-  color: var(--color-text-muted);
+  color: #999;
   padding: 0;
   width: 2rem;
   height: 2rem;
@@ -1426,7 +1170,7 @@ code {
 }
 
 .modal-close:hover {
-  color: var(--color-text-primary);
+  color: #333;
 }
 
 .modal-body {
@@ -1442,16 +1186,13 @@ code {
 
 .detail-item {
   padding: 0.75rem;
-  background: var(--color-bg-secondary);
+  background: #f8f9fa;
   border-radius: 6px;
-  color: var(--color-text-primary);
-  transition: var(--theme-transition);
 }
 
 .detail-subtitle {
   margin: 1.5rem 0 1rem;
   font-size: 1.2rem;
-  color: var(--color-text-primary);
 }
 
 .records-list {
@@ -1461,10 +1202,9 @@ code {
 }
 
 .record-item {
-  border: 1px solid var(--color-border);
+  border: 1px solid #dee2e6;
   border-radius: 6px;
   padding: 1rem;
-  transition: var(--theme-transition);
 }
 
 .record-header {
@@ -1476,11 +1216,11 @@ code {
 
 .record-ip {
   font-family: "Courier New", monospace;
-  color: var(--color-accent);
+  color: #667eea;
 }
 
 .record-count {
-  color: var(--color-text-secondary);
+  color: #666;
   font-size: 0.9rem;
 }
 
@@ -1494,27 +1234,26 @@ code {
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-size: 0.85rem;
-  background: var(--color-bg-tertiary);
-  color: var(--color-text-secondary);
+  background: #e9ecef;
+  color: #495057;
 }
 
 .result-badge.pass {
-  background: var(--color-success-bg);
-  color: var(--color-success-text);
+  background: #d4edda;
+  color: #155724;
 }
 
 .result-badge.fail {
-  background: var(--color-error-bg);
-  color: var(--color-error-text);
+  background: #f8d7da;
+  color: #721c24;
 }
 
 .footer {
-  background: var(--color-bg-header);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   padding: 2rem 0 1rem;
-  color: var(--color-text-inverse);
+  color: white;
   margin-top: auto;
-  transition: var(--theme-transition);
 }
 
 .footer-content {
@@ -1556,7 +1295,7 @@ code {
 }
 
 .footer-bottom {
-  border-top: 1px solid var(--color-border-light);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 1rem;
   text-align: center;
   font-size: 0.85rem;
@@ -1602,14 +1341,8 @@ code {
     gap: 1rem;
   }
 
-  .header-actions {
+  .refresh-button {
     width: 100%;
-    justify-content: flex-end;
-  }
-
-  .refresh-button,
-  .theme-toggle {
-    flex: 1;
     justify-content: center;
   }
 
