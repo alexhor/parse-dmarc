@@ -16,7 +16,7 @@ A Go application that fetches DMARC reports from IMAP mailboxes, parses them, an
 
 ```
 parse-dmarc/
-├── cmd/parse-dmarc/       # Main application entry point
+├── main.go                # Main application entry point
 ├── internal/
 │   ├── api/               # REST API server and embedded frontend
 │   ├── config/            # Configuration management (JSON + env vars)
@@ -100,7 +100,7 @@ go test -v ./internal/parser/...
 
 ## Key Files
 
-- `cmd/parse-dmarc/main.go` - CLI entry point with flag parsing
+- `./main.go` - CLI entry point with flag parsing
 - `internal/api/server.go` - HTTP server and API routes
 - `internal/config/config.go` - Configuration loading (JSON file + env vars)
 - `internal/parser/dmarc.go` - DMARC XML parsing logic

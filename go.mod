@@ -1,6 +1,6 @@
 module github.com/meysam81/parse-dmarc
 
-go 1.24.7
+go 1.25.4
 
 require (
 	github.com/caarlos0/env/v11 v11.3.1
@@ -8,6 +8,7 @@ require (
 	github.com/emersion/go-message v0.18.2
 	github.com/goccy/go-json v0.10.5
 	github.com/mattn/go-sqlite3 v1.14.32
+	github.com/prometheus/client_golang v1.23.2
 	github.com/urfave/cli/v3 v3.5.0
 	modernc.org/sqlite v1.40.0
 )
@@ -18,10 +19,10 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/emersion/go-sasl v0.0.0-20241020182733-b788ff22d5a6 // indirect
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
-	github.com/prometheus/client_golang v1.23.2 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.66.1 // indirect
 	github.com/prometheus/procfs v0.16.1 // indirect
