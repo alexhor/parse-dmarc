@@ -22,40 +22,6 @@
       </div>
     </header>
 
-    <!-- Star Banner -->
-    <div v-if="starBannerVisible" class="star-banner">
-      <div class="container">
-        <div class="star-banner-content">
-          <div class="star-banner-text">
-            <span class="star-banner-icon">⭐</span>
-            <span class="star-banner-message">
-              <strong>Self-hosting Parse DMARC?</strong> Support open-source
-              email security! Give us a star on GitHub and help others discover
-              this tool.
-            </span>
-          </div>
-          <div class="star-banner-actions">
-            <a
-              href="https://github.com/meysam81/parse-dmarc"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="star-button"
-            >
-              ⭐ Star on GitHub
-            </a>
-            <button
-              class="dismiss-button"
-              @click="dismissStarBanner"
-              title="Dismiss star banner"
-              aria-label="Dismiss star banner"
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <main class="main">
       <div class="container">
         <!-- Statistics Cards -->
@@ -329,6 +295,15 @@
           <div class="footer-section">
             <h4>Parse DMARC</h4>
             <p>RFC 7489 Compliant DMARC Report Parser</p>
+            <a
+              href="https://github.com/meysam81/parse-dmarc"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="github-star-link"
+            >
+              <span class="github-star-icon">⭐</span>
+              <span>Star on GitHub</span>
+            </a>
           </div>
           <div class="footer-section">
             <h4>Links</h4>
@@ -724,15 +699,29 @@ export default {
   }
 }
 
-.star-banner {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 215, 0, 0.15),
-    rgba(255, 165, 0, 0.15)
-  );
-  backdrop-filter: blur(10px);
-  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
-  animation: slideDown 0.5s ease-out;
+.github-star-link {
+  display: inline-flex;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.github-star-link:hover {
+  background: rgba(255, 215, 0, 0.25);
+  border-color: rgba(255, 215, 0, 0.5);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.github-star-icon {
+  font-size: 0.9rem;
 }
 
 @keyframes slideDown {
@@ -1390,6 +1379,10 @@ code {
 
   .footer-links {
     align-items: center;
+  }
+
+  .github-star-link {
+    justify-content: center;
   }
 }
 </style>
