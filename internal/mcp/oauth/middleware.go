@@ -115,7 +115,7 @@ func (m *BearerAuthMiddleware) unauthorized(w http.ResponseWriter, errorCode, de
 
 	// Return JSON error response
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, `{"error":"%s","error_description":"%s"}`, errorCode, description)
+	_, _ = fmt.Fprintf(w, `{"error":"%s","error_description":"%s"}`, errorCode, description)
 }
 
 // extractBearerToken extracts the bearer token from the Authorization header.
