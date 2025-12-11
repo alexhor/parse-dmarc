@@ -212,17 +212,21 @@ func run(ctx context.Context, cmd *cli.Command) error {
 				}
 			}
 
-			// Determine resource server URL from HTTP address
-			resourceServerURL := mcpOAuthAudience
-			if resourceServerURL == "" && mcpHTTPAddr != "" {
+			// Determine resource server URL and audience from HTTP address
+			var resourceServerURL, audience string
+			if mcpOAuthAudience != "" {
+				resourceServerURL = mcpOAuthAudience
+				audience = mcpOAuthAudience
+			} else if mcpHTTPAddr != "" {
 				// Use localhost with the port if no audience specified
 				resourceServerURL = "http://localhost" + mcpHTTPAddr
+				audience = resourceServerURL
 			}
 
 			oauthCfg = &oauth.Config{
 				Enabled:               true,
 				Issuer:                mcpOAuthIssuer,
-				Audience:              mcpOAuthAudience,
+				Audience:              audience,
 				ClientID:              mcpOAuthClientID,
 				ClientSecret:          mcpOAuthClientSecret,
 				RequiredScopes:        scopes,
