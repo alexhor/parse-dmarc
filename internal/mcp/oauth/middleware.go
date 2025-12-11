@@ -111,10 +111,10 @@ func (m *BearerAuthMiddleware) unauthorized(w http.ResponseWriter, errorCode, de
 	}
 
 	w.Header().Set("WWW-Authenticate", authHeader)
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusUnauthorized)
 
 	// Return JSON error response
-	w.Header().Set("Content-Type", "application/json")
 	_, _ = fmt.Fprintf(w, `{"error":"%s","error_description":"%s"}`, errorCode, description)
 }
 
