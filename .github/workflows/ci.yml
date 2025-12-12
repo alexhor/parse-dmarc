@@ -116,12 +116,8 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: Install goreleaser
-        run: |
-          echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
-          sudo apt update
-          sudo apt install -y goreleaser
-          goreleaser --version
+      - name: Install pandoc
+        uses: pandoc/actions/setup@v1
       - name: Build docker
         uses: meysam81/build-docker@main
         with:
@@ -140,11 +136,15 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}.{{minor}}.{{patch}}
           kubescape: true
-      - env:
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean --release-notes CHANGELOG.md
+        env:
           GITHUB_TOKEN: ${{ github.token }}
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
-        name: Run goreleaser
-        run: goreleaser release --release-notes CHANGELOG.md --clean
 
   # deploy-grafana:
   #   needs: [release-please, build-prod]
