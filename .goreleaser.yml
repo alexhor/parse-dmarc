@@ -203,6 +203,8 @@ homebrew_casks:
           if OS.mac?
             system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/parse-dmarc"]
           end
+          puts "✨ parse-dmarc installed successfully!"
+          puts ""
           puts "📝 Tip: You can enable shell completion by running:"
           puts "   parse-dmarc completion bash  # for bash"
           puts "   parse-dmarc completion zsh   # for zsh"

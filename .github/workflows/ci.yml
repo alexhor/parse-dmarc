@@ -179,7 +179,7 @@ jobs:
         with:
           subject-checksums: ./.goreleaser-dist/checksums.txt
       - uses: actions/attest-build-provenance@v3
-        if: env.NO_DIGEST != 'true'
+        if: env.NO_DIGEST != 'false'
         with:
           subject-checksums: ./.goreleaser-dist/digest.txt
 
