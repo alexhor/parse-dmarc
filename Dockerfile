@@ -8,7 +8,6 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.bun/install/cache \
     bun install --frozen-lockfile
 
-COPY bun.lock index.html package*.json vite.config.js ./
 COPY . .
 RUN bun run build
 

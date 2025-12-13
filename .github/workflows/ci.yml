@@ -142,24 +142,6 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: Build docker
-        uses: meysam81/build-docker@main
-        with:
-          build-args: |
-            VERSION=${{ needs.release-please.outputs.tag_name }}
-            COMMIT=${{ github.sha }}
-            DATE=${{ github.event.head_commit.timestamp }}
-            BUILT_BY=github-actions
-          checkout: false
-          cosign: true
-          image-name: ghcr.io/${{ github.repository }}
-          image-extra-tags: |
-            ghcr.io/${{ github.repository }}:${{ needs.release-please.outputs.tag_name }}
-          metadata-tags: |
-            type=semver,pattern={{major}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}.{{minor}}.{{patch}}
-          kubescape: true
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:

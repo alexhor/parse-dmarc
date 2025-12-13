@@ -120,6 +120,47 @@ binary_signs:
     output: true
     signature: ${artifact}_{{- tolower .Os }}_{{- if eq .Arch "386" }}i386{{- else }}{{ .Arch }}{{ end }}{{- if .Arm }}v{{ .Arm }}{{ end }}.sig
 
+dockers_v2:
+  - images:
+      - ghcr.io/meysam81/{{ .ProjectName }}
+    tags:
+      - "v{{ .Version }}"
+      - "v{{ .Major }}"
+      - "v{{ .Major }}.{{ .Minor }}"
+      - "v{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+      - "{{ if .IsNightly }}latest{{ end }}"
+    labels:
+      "org.opencontainers.image.created": "{{.Date}}"
+      "org.opencontainers.image.description": "{{.ReleaseNotes}}"
+      "org.opencontainers.image.name": "{{.ProjectName}}"
+      "org.opencontainers.image.revision": "{{.FullCommit}}"
+      "org.opencontainers.image.source": "{{.GitURL}}"
+      "org.opencontainers.image.version": "{{.Version}}"
+    annotations:
+      "project": "{{.ProjectName}}"
+      "author": "Meysam Azad"
+    platforms:
+      - linux/amd64
+      - linux/arm64
+    # disable: "{{ .IsSnapshot }}"
+    sbom: "{{ not .IsNightly }}"
+    build_args:
+      VERSION: "{{.Version}}"
+      COMMIT: "{{.FullCommit}}"
+      DATE: "{{.Date}}"
+      BUILT_BY: goreleaser
+
+docker_signs:
+  - id: default
+    cmd: cosign
+    output: true
+
+docker_digest:
+  name_template: "digest.txt"
+  disable: "{{ .Env.NO_DIGEST }}"
+
+report_sizes: true
+
 sboms:
   - artifacts: archive
     documents:
@@ -145,7 +186,6 @@ checksum:
 homebrew_casks:
   - commit_msg_template: Brew formula update for {{ .ProjectName }} version {{ .Tag }}
     description: Single-binary, zero-dependency DMARC parser with a modern web dashboard.
-    # directory: Formulae
     homepage: https://github.com/meysam81/parse-dmarc
     license: Apache-2.0
     name: parse-dmarc
@@ -155,8 +195,14 @@ homebrew_casks:
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     hooks:
       post:
-        # replace foo with the actual binary name
         install: |
           if OS.mac?
             system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/parse-dmarc"]
           end
+          puts "📝 Tip: You can enable shell completion by running:"
+          puts "   parse-dmarc completion bash  # for bash"
+          puts "   parse-dmarc completion zsh   # for zsh"
+          puts "   parse-dmarc completion fish  # for fish"
+          puts ""
+          puts "📚 For more information and usage instructions, visit:"
+          puts "   https://github.com/meysam81/parse-dmarc"
