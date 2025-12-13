@@ -139,9 +139,6 @@ dockers_v2:
       "org.opencontainers.image.revision": "{{.FullCommit}}"
       "org.opencontainers.image.source": "{{.GitURL}}"
       "org.opencontainers.image.version": "{{.Version}}"
-    annotations:
-      "project": "{{.ProjectName}}"
-      "author": "Meysam Azad"
     platforms:
       - linux/amd64
       - linux/arm64
