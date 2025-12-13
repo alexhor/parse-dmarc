@@ -129,6 +129,8 @@ dockers_v2:
       - "v{{ .Major }}.{{ .Minor }}"
       - "v{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
       - "{{ if .IsNightly }}latest{{ end }}"
+    extra_files:
+      - ./
     labels:
       "org.opencontainers.image.created": "{{.Date}}"
       "org.opencontainers.image.description": "{{.ReleaseNotes}}"

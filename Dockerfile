@@ -1,4 +1,4 @@
-# Build stage
+# syntax=docker/dockerfile:1
 FROM oven/bun:1 AS frontend-builder
 
 WORKDIR /build/frontend
