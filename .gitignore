@@ -62,3 +62,5 @@ tmp
 dist
 parse-dmarc
 parse-dmarc.1
+.secrets/
+ignore

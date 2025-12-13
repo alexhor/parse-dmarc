@@ -142,8 +142,6 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: Install pandoc
-        uses: pandoc/actions/setup@v1
       - name: Build docker
         uses: meysam81/build-docker@main
         with:
