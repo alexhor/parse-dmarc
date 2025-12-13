@@ -170,18 +170,18 @@ jobs:
           version: "~> v2"
           args: release --clean --release-notes CHANGELOG.md
         env:
+          BUILDKIT_MULTI_PLATFORM: "${{ vars.BUILDKIT_MULTI_PLATFORM }}"
+          DISABLE_SBOM: "${{ vars.DISABLE_SBOM }}"
           GITHUB_TOKEN: ${{ github.token }}
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
           NO_DIGEST: ${{ vars.NO_DIGEST }}
-          BUILDKIT_MULTI_PLATFORM: "${{ vars.BUILDKIT_MULTI_PLATFORM }}"
-          DISABLE_SBOM: "${{ vars.DISABLE_SBOM }}"
       - uses: actions/attest-build-provenance@v3
         with:
           subject-checksums: ./.goreleaser-dist/checksums.txt
       - uses: actions/attest-build-provenance@v3
         if: env.NO_DIGEST != 'true'
         with:
-          subject-checksums: ./.goreleaser-dist/digests.txt
+          subject-checksums: ./.goreleaser-dist/digest.txt
 
   # deploy-grafana:
   #   needs: [release-please, build-prod]
