@@ -26,11 +26,12 @@ Deploy Parse DMARC to your favorite cloud provider with one click:
 | **Railway** | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/4kqQ_I?referralCode=meysam)                                        | Recommended for beginners                                 |
 | **Render**  | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/meysam81/parse-dmarc) | Free tier available                                       |
 | **Koyeb**   | [![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)][koyeb-1click]                                                            | Global edge deployment. Manually mount `/data` as volume. |
+| **Zeabur**  | [![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/YB3TS7?referralCode=meysam)                                        | Asia-Pacific optimized                                    |
 
 <!--
-| **Zeabur**     | [![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/parse-dmarc)                                                                            | Asia-Pacific optimized    |
+[![Deployed on Zeabur](https://zeabur.com/deployed-on-zeabur-dark.svg)](https://zeabur.com/referral?referralCode=meysam)
 | **Northflank** | [![Deploy to Northflank](https://northflank.com/button.svg)](https://app.northflank.com/s/account/templates/new?externalTemplateId=parse-dmarc)                           | Developer-focused         |
-| **Fly.io**     | [![Deploy to Fly.io](https://img.shields.io/badge/Deploy-Fly.io-7B3FE4?style=for-the-badge&logo=fly.io)](https://fly.io/launch?image=ghcr.io/meysam81/parse-dmarc:latest) | Edge computing            |
+| **Fly.io**     | [![Deploy to Fly.io](https://img.shields.io/badge/Deploy-Fly.io-7B3FE4?style=for-the-badge&logo=fly.io)](https://fly.io/launch?image=meysam81/parse-dmarc:v1) | Edge computing            |
 
 ### Enterprise Cloud
 

@@ -51,3 +51,6 @@ install: build
 
 frontend-dev:
     bun run dev
+
+update-zeabur-template:
+    bunx zeabur@latest template update -f zeabur.yml -c YB3TS7

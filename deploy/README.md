@@ -58,7 +58,7 @@ docker run -d \
   -e IMAP_USERNAME=your-email@gmail.com \
   -e IMAP_PASSWORD=your-app-password \
   -v parse-dmarc-data:/data \
-  ghcr.io/meysam81/parse-dmarc:latest
+  meysam81/parse-dmarc:v1
 ```
 
 ### Using Fly.io CLI
@@ -90,7 +90,7 @@ gcloud builds submit --config=deploy/cloudbuild.yaml
 
 # Or deploy directly
 gcloud run deploy parse-dmarc \
-  --image ghcr.io/meysam81/parse-dmarc:latest \
+  --image meysam81/parse-dmarc:v1 \
   --platform managed \
   --region us-central1 \
   --allow-unauthenticated \
