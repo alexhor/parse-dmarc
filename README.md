@@ -29,27 +29,15 @@ Deploy Parse DMARC to your favorite cloud provider with one click:
 | **Zeabur**     | [![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/YB3TS7?referralCode=meysam)                                                                      | Asia-Pacific optimized                                    |
 | **Northflank** | [![Deploy to Northflank](https://assets.northflank.com/deploy_to_northflank_smm_36700fb050.svg)](https://app.northflank.com/s/account/templates/new?data=693e394eb41e1e64db65187e) | Developer-focused                                         |
 
-<!--
-
-### Enterprise Cloud
-
-| Provider                 | Deploy                                                                                                                                                                                                                          | Notes                 |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| **Google Cloud Run**     | [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run?git_repo=https://github.com/meysam81/parse-dmarc)                                                                                        | Serverless containers |
-| **Azure Container Apps** | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmeysam81%2Fparse-dmarc%2Fmain%2Fdeploy%2Fazure-container-apps.bicep) | Microsoft Azure       |
-
 ### Self-Hosted
 
-| Provider     | Deploy                                                                                                                                                                   | Notes                          |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
-| **CapRover** | [![Deploy to CapRover](https://img.shields.io/badge/Deploy-CapRover-0072CE?style=for-the-badge&logo=docker)](https://github.com/meysam81/parse-dmarc)                    | Self-hosted PaaS               |
-| **Coolify**  | [![Deploy to Coolify](https://img.shields.io/badge/Deploy-Coolify-6B46C1?style=for-the-badge&logo=docker)](https://github.com/meysam81/parse-dmarc)                      | Open-source Heroku alternative |
-| **Docker**   | [![Docker](https://img.shields.io/badge/Docker-Pull%20Image-2496ED?style=for-the-badge&logo=docker)](https://github.com/meysam81/parse-dmarc/pkgs/container/parse-dmarc) | Run anywhere                   |
+| Provider     | Deploy                                                                                                                                              | Notes                          |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| **CapRover** | [![Deploy to CapRover](https://img.shields.io/badge/Deploy-CapRover-0072CE?style=for-the-badge&logo=docker)](./deploy/captain-definition)           | Self-hosted PaaS               |
+| **Coolify**  | [![Deploy to Coolify](https://img.shields.io/badge/Deploy-Coolify-6B46C1?style=for-the-badge&logo=docker)](./deploy/coolify.yaml)                   | Open-source Heroku alternative |
+| **Docker**   | [![Docker](https://img.shields.io/badge/Docker-Pull%20Image-2496ED?style=for-the-badge&logo=docker)](https://hub.docker.com/r/meysam81/parse-dmarc) | Run anywhere                   |
 
 > **Note**: All deployments require IMAP credentials. See [Configuration](#configuration-options) for details on setting up Gmail, Outlook, or other email providers.
-
-See the [`deploy/`](./deploy/) directory for provider-specific configuration files and templates.
--->
 
 ## Why Do I Need This?
 
