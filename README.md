@@ -30,8 +30,6 @@ Deploy Parse DMARC to your favorite cloud provider with one click:
 | **Northflank** | [![Deploy to Northflank](https://assets.northflank.com/deploy_to_northflank_smm_36700fb050.svg)](https://app.northflank.com/s/account/templates/new?data=693e394eb41e1e64db65187e) | Developer-focused                                         |
 
 <!--
-[![Deployed on Zeabur](https://zeabur.com/deployed-on-zeabur-dark.svg)](https://zeabur.com/referral?referralCode=meysam)
-| **Fly.io**     | [![Deploy to Fly.io](https://img.shields.io/badge/Deploy-Fly.io-7B3FE4?style=for-the-badge&logo=fly.io)](https://fly.io/launch?image=meysam81/parse-dmarc:v1) | Edge computing            |
 
 ### Enterprise Cloud
 
